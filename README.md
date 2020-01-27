@@ -7,9 +7,13 @@ This customisation contains a report and spec that is based on the original R68 
 
 ### Installing
 
-Download the Blackbaud.CustomFx.R68.HistoryView DLL and place it in the \bbappfx\vroot\bin folder of your Blackbaud CRM installation.
+Download the Blackbaud.CustomFx.R68.HistoryView DLL and place it in the \bbappfx\vroot\bin\custom folder of your Blackbaud CRM installation.
 
 Navigate to Administration -> Features -> Catalog Browser in BBCRM and deploy the R68 History View Package. A new Action button will appear on the History tab of the R68 Process called 'View R68 Snapshot report'.
+
+### Other Info
+
+As part of the XML submission, the constituent details of refunds are NOT submitted. Only the amount of the refund is sent so this information will not be reflected as part of this customisation
 
 ## Authors
 
