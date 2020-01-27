@@ -21,28 +21,16 @@ with execute as owner
 as 
     set nocount on;
 
-    declare @TABLENAME nvarchar(255);
-    declare @COUNT integer;
     declare @REPORTTYPE nvarchar(10);
     declare @SQL nvarchar(4000);
-  declare @ISSPONSORSHIP bit = 0;
 
     begin try
-        select 
-            @TABLENAME = TABLENAME
-        from dbo.BUSINESSPROCESSOUTPUT 
-        where BUSINESSPROCESSSTATUSID = @BUSINESSPROCESSSTATUSID 
-            and TABLEKEY = 'R68_OUTPUT';
             
         if dbo.UFN_R68_HASPENDINGRECORDS(@BUSINESSPROCESSSTATUSID) = 0
             set @REPORTTYPE = 'Committed';
         else
             set @REPORTTYPE = 'Preview';
 
-select @ISSPONSORSHIP = R68.RUNGIFTAIDSPONSORSHIPSONLY
-                                        from dbo.R68ONLINESUBMISSIONPARAMETERS
-                                        inner join dbo.R68 on R68ONLINESUBMISSIONPARAMETERS.R68PROCESSID = R68.ID
-                                        where R68ONLINESUBMISSIONPARAMETERS.ID = @BUSINESSPROCESSSTATUSID;
             set
    @SQL = 
    'SELECT ' +
