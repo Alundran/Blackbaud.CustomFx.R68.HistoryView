@@ -96,6 +96,10 @@
           <DataField>REPORTTYPE</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
+        <Field Name="SUBMITTED">
+          <DataField>SUBMITTED</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
@@ -123,7 +127,25 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>This report shows the details of the records sent to HMRC via the Online Submission process.</Value>
+                    <Value>This report shows the details of the records that </Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Format>d</Format>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=IIF(First(Fields!SUBMITTED.Value, "USR_USP_REPORT_R68_XMLCLAIM") = "Yes", "have been", "will be")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>d</Format>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> submitted to Charities Online.</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                       <Format>d</Format>
@@ -196,7 +218,7 @@
             <Top>0.61in</Top>
             <Left>2.25in</Left>
             <Height>0.25in</Height>
-            <Width>5.52in</Width>
+            <Width>2.57in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border />
@@ -1390,6 +1412,69 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="ENDDATE2">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!SUBMITTED.Value, "USR_USP_REPORT_R68_XMLCLAIM")</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Format>d</Format>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.61in</Top>
+            <Left>6.85333in</Left>
+            <Height>0.25in</Height>
+            <Width>0.91667in</Width>
+            <ZIndex>12</ZIndex>
+            <Style>
+              <Border />
+              <BackgroundColor>#f5f5f5</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="txtCaptionDateRange7">
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Submitted to Charities Online:</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.61in</Top>
+            <Left>4.82in</Left>
+            <Height>0.25in</Height>
+            <Width>2.03333in</Width>
+            <ZIndex>13</ZIndex>
+            <Style>
+              <BackgroundColor>#f5f5f5</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>2.84958in</Height>
         <Style />
@@ -1422,6 +1507,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>textbox19</rd:DefaultName>
+              <Top>0cm</Top>
               <Height>0.125in</Height>
               <Width>1.75in</Width>
               <Style>
@@ -1452,6 +1538,7 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
+              <Top>0cm</Top>
               <Left>2.925in</Left>
               <Height>0.125in</Height>
               <Width>1.75in</Width>
@@ -1484,6 +1571,7 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
+              <Top>0cm</Top>
               <Left>5.52in</Left>
               <Height>0.125in</Height>
               <Width>2.25in</Width>

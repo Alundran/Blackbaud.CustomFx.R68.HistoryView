@@ -90,7 +90,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PackageSpec.R68HistoryView.xml" />
+    <EmbeddedResource Include="PackageSpec.R68HistoryView.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Deploy\Blackbaud.CustomFx.R68.HistoryView.dll" />

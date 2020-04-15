@@ -1,19 +1,19 @@
-﻿<ReportSpec 
+﻿<ReportSpec
 	xmlns="bb_appfx_report"
-	xmlns:c="bb_appfx_commontypes" 
-	ID="1d06421e-a4db-498f-9549-595d2cc344c9" 
+	xmlns:c="bb_appfx_commontypes"
+	ID="1d06421e-a4db-498f-9549-595d2cc344c9"
 	Name="R68 History View Report"
 	Description="A report that parses the XML that is submitted to HMRC to give a historic view of R68 claims"
 	Author="BLACKBAUD\derek.marr"
 	>
 
-	<RDLFileName>R68HistoryView.rdl</RDLFileName>
-	<Folder>System Reports/Misc Reports</Folder>
-	
-	<DataRetrieval>
-		<CreateSQL ObjectName="dbo.USR_USP_REPORT_R68_XMLCLAIM" ObjectType="SQLStoredProc">
-			<![CDATA[
-create procedure dbo.USR_USP_REPORT_R68_XMLCLAIM
+  <RDLFileName>R68HistoryView.rdl</RDLFileName>
+  <Folder>System Reports/Misc Reports</Folder>
+
+  <DataRetrieval>
+    <CreateSQL ObjectName="dbo.USR_USP_REPORT_R68_XMLCLAIM" ObjectType="SQLStoredProc">
+      <![CDATA[
+create procedure [dbo].[USR_USP_REPORT_R68_XMLCLAIM]
 (
     @BUSINESSPROCESSSTATUSID nvarchar(60)
 )
@@ -22,7 +22,9 @@ as
     set nocount on;
 
     declare @REPORTTYPE nvarchar(10);
+    declare @SUBMITTED nvarchar(10);
     declare @SQL nvarchar(4000);
+
 
     begin try
             
@@ -31,6 +33,11 @@ as
         else
             set @REPORTTYPE = 'Preview';
 
+        if (SELECT FILESUBMITTED FROM dbo.R68ONLINESUBMISSIONPARAMETERS WHERE ID = @BUSINESSPROCESSSTATUSID) = 0
+            set @SUBMITTED = 'No';
+        else
+            set @SUBMITTED = 'Yes';
+            
             set
    @SQL = 
    'SELECT ' +
@@ -41,9 +48,10 @@ as
 	  T2.N.value(''' + '(*:Donor[1]/*:Sur[1])' + ''',''' + 'nvarchar(50)' + ''') as Surname,
 	  T2.N.value(''' + '(*:Donor[1]/*:House[1])' + ''',''' + 'nvarchar(50)' + ''') as Address,
 	  T2.N.value(''' + '(*:Donor[1]/*:Postcode[1])' + ''',''' + 'nvarchar(50)' + ''') as Postcode,
-	  @REPORTTYPEIN as REPORTTYPE
+	  @REPORTTYPEIN as REPORTTYPE,
+    @SUBMITTEDIN AS SUBMITTED
    FROM
-      dbo.R68ONLINESUBMISSIONPARAMETERS as T cross apply T.submissionfile.nodes(''' + '/*:GovTalkMessage[1]/*:Body[1]/*:IRenvelope[1]/*:R68[1]/*:Claim[1]/*:Repayment[1]''' + ') as T1(N) cross apply T1.N.nodes(''' + '*:GAD' + ''') as T2(N)
+      dbo.R68ONLINESUBMISSIONPARAMETERS as T cross apply T.SUBMISSIONFILE.nodes(''' + '//*:GAD' + ''') as T2(N)
    WHERE
       T.ID = ''' + CAST(@BUSINESSPROCESSSTATUSID AS NVARCHAR(MAX)) + '''
    ORDER BY
@@ -52,7 +60,7 @@ as
           
       
                     
-        exec sp_executesql @SQL, N'@REPORTTYPEIN nvarchar(10)', @REPORTTYPEIN = @REPORTTYPE;
+        exec sp_executesql @SQL, N'@REPORTTYPEIN nvarchar(10), @SUBMITTEDIN nvarchar(10)', @REPORTTYPEIN = @REPORTTYPE, @SUBMITTEDIN = @SUBMITTED;
     end try
 
     begin catch
@@ -60,19 +68,40 @@ as
         return 1;
     end catch
 			]]>
-		</CreateSQL>
-	</DataRetrieval>
+    </CreateSQL>
+  </DataRetrieval>
 
   <AlterExistingPages xmlns="bb_appfx_pagedefinition">
     <AlterPages>
       <AlterPage PageID="793ff7ba-469d-43c7-8b76-a45e30bd029a">
         <AlterTabs>
+          <AlterTab TabID="73a1b0ac-4bd3-4dbd-8ed8-b573483b59d9">
+            <AlterSections>
+              <AlterDataFormSection DataFormID="f0ac6e94-e638-42f8-95a6-021c8cebb13c" SectionID ="4bf20758-9120-4fb5-ba6d-e5516c360ed1">
+                <AlterActions>
+                  <AddAction>
+                    <Action ImageKey="RES:PrintPreview" Enabled="=(Fields!COMPLETED = True) andalso (Fields!SUCCESSCOUNT > 0)" Caption="View R68 Snapshot report" ToolTipText="View a snapshot of the data that will be submitted to Charities Online" ID="648CADE5-7D49-4CAE-A622-C03B4BC237E0">
+                      <ShowReport ReportID="1d06421e-a4db-498f-9549-595d2cc344c9" Caption="View R68 Snapshot report" xmlns="bb_appfx_commontypes">
+                        <ParameterValues>
+                          <ParameterValue ID="BUSINESSPROCESSSTATUSID">
+                            <Value>
+                              <SectionField>ID</SectionField>
+                            </Value>
+                          </ParameterValue>
+                        </ParameterValues>
+                      </ShowReport>
+                    </Action>
+                  </AddAction>
+                </AlterActions>
+              </AlterDataFormSection>
+            </AlterSections>
+          </AlterTab>
           <AlterTab TabID="1a7ab955-3dc2-49a5-97ae-04cde2a45d54">
             <AlterSections>
               <AlterDataListSection DataListID="08715be0-9f1e-43ed-b754-aa2935b5cc18" SectionID ="d63cf3ba-5a7e-447b-94ea-56bc1e9faa97">
                 <AlterActions>
                   <AddAction>
-                    <Action ImageKey="RES:PrintPreview" Enabled="=(Fields!COMPLETED = True) andalso (Fields(&quot;Number of records processed&quot;) &gt; 0)" Caption="View R68 Snapshot report" ToolTipText="View a snapshot of the data submitted to HMRC. This is point in time data." ID="648CADE5-7D49-4CAE-A622-C03B4BC237E0">
+                    <Action ImageKey="RES:PrintPreview" Enabled="=(Fields!COMPLETED = True) andalso (Fields(&quot;Number of records processed&quot;) &gt; 0)" Caption="View R68 Snapshot report" ToolTipText="View a snapshot of the data that was submitted to Charities Online." ID="648CADE5-7D49-4CAE-A622-C03B4BC237E0">
                       <ShowReport ReportID="1d06421e-a4db-498f-9549-595d2cc344c9" Caption="View R68 Snapshot report" xmlns="bb_appfx_commontypes">
                         <ParameterValues>
                           <ParameterValue ID="BUSINESSPROCESSSTATUSID">
@@ -92,5 +121,5 @@ as
       </AlterPage>
     </AlterPages>
   </AlterExistingPages>
-  
+
 </ReportSpec>
