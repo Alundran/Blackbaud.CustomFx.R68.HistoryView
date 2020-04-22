@@ -1,3 +1,6 @@
+# Important Note
+This functionality was introduced in SP25 of Blackbaud CRM. Please do not deploy this customisation as conflicts may occur with the now out of box code.
+
 # Blackbaud.CustomFx.R68.HistoryView
 Adds a button to the R68 Process history to view a snapshot report of data retained in the Gift Aid Online Submission XML. This is for Blackbaud CRM.
 
